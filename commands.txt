@@ -1,0 +1,2 @@
+yarn hardhat run .\tests\testscript.ts
+yarn hardhat test
