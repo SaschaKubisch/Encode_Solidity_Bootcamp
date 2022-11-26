@@ -29,24 +29,16 @@ async function main() {
     console.log(`Connected to account ${signer.address} with balance ${balanceBN.toString()} Wei`);
 
     const args = process.argv;
-    const proposals = args.slice(2);
-
-    if (proposals.length <= 0 ) throw Error("Not enough args");
-    console.log("Deploying Ballot contract");
-    console.log("Proposals: ");
-    proposals.forEach((element, index) => {
-      console.log(`Proposal N. ${index + 1}: ${element}`);
-    });
+    const params = args.slice(2);
+    const contractAddress = params[0];
+    const targetAccount = params[1];
 
     let ballotContract: Ballot;
-    // let accounts: SignerWithAddress[];
-    // accounts = await ethers.getSigners();
     const ballotContractFactory = new Ballot__factory(signer);
-    ballotContract = await ballotContractFactory.deploy(convertStringArrayToBytes32(proposals));
-    await ballotContract.deployed();
-    console.log(`The contract was deployed at the address ${ballotContract.address}`);
-    const chairperson = await ballotContract.chairperson();
-    console.log(`The chairperson is ${chairperson}`);
+    ballotContract = ballotContractFactory.attach(contractAddress);
+    const tx = await ballotContract.giveRightToVote(targetAccount);
+    const receipt = await tx.wait();
+    console.log({receipt});
 
 }
 
