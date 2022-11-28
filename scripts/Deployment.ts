@@ -18,10 +18,13 @@ async function main() {
     console.log(`Balance01 ${balance01}`);
     const transferTx = await erc20TokenContract.transfer(accounts[1].address, 1);
     await transferTx.wait();
+
     const balance02 = await erc20TokenContract.balanceOf(accounts[0].address);
     console.log(`Balance02 ${balance02}`);
+
     const balance12 = await erc20TokenContract.balanceOf(accounts[1].address);
     console.log(`Balance12 ${balance12}`);
+    
     const balance03 = await erc20TokenContract.balanceOf(accounts[0].address);
     console.log(`Balance03 ${balance03}`);
 
