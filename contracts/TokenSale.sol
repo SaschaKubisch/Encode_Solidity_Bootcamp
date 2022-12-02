@@ -53,8 +53,8 @@ contract TokenSale {
 
     }
 
-    function ownerWithdraw external {
-        
+    function ownerWithdraw() external {
+
     }
 
 }
