@@ -3,22 +3,50 @@ pragma solidity >=0.7.0 <0.9.0;
 
 interface IMyERC20Token {
     function mint(address to, uint256 amount) external;
-
+    function burnFrom(address account, uint256 amount) external;
+    function transferFrom(address from, address to, uint256 amount) external;
 }
 
+interface IMyERC721Token {
+    function safeMint(address to, uint256 tokenId) external;
+    function burn(uint256 tokenId) external;
+}
 
 contract TokenSale {
     uint256 public ratio;
+    uint256 public price;
     IMyERC20Token public paymentToken;
+    IMyERC721Token public nftContract;
+    uint256 public ownerpool;
+    uint256 public publicpool;
 
-    constructor (uint256 _ratio, address _paymentToken) {
+    constructor (
+        uint256 _ratio, 
+        uint256 _price, 
+        address _paymentToken, 
+        address _nftContract
+    ) {
         ratio = _ratio;
+        price = _price;
         paymentToken = IMyERC20Token(_paymentToken);
+        nftContract = IMyERC721Token(_nftContract);
 
     }
 
     function purchaseTokens() external payable {
         paymentToken.mint(msg.sender, msg.value / ratio);
+    }
+
+    function burnTokens(uint256 amount) external {
+        paymentToken.burnFrom(msg.sender, amount);
+        payable(msg.sender).transfer(amount * ratio);
+    }
+
+    function purchaseNFT(uint256 tokenId) external {
+        paymentToken.transferFrom(msg.sender, address(this), price);
+        nftContract.safeMint(msg.sender, tokenId);
+        publicpool += price / 2;
+        ownerpool += price / 2;
     }
 
 }
