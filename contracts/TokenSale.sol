@@ -49,4 +49,12 @@ contract TokenSale {
         ownerpool += price / 2;
     }
 
+    function burnNFT() external {
+
+    }
+
+    function ownerWithdraw external {
+        
+    }
+
 }
